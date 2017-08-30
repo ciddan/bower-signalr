@@ -210,6 +210,15 @@
             return parseInt(matches[1], 10 /* radix */);
         },
 
+        chromeMajorVersion: function (userAgent) {
+            // Chrome user agents: http://useragentstring.com
+            var matches = userAgent.match(/Chrome\/(\d+)/);
+            if (!matches || !matches.length || matches.length < 2) {
+                return 0;
+            }
+            return parseInt(matches[1], 10 /* radix */);
+        },
+
         configurePingInterval: function (connection) {
             var config = connection._.config,
                 onFail = function (error) {
@@ -596,7 +605,8 @@
                     connection._.initHandler.start(transport, function () { // success
                         // Firefox 11+ doesn't allow sync XHR withCredentials: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#withCredentials
                         var isFirefox11OrGreater = signalR._.firefoxMajorVersion(window.navigator.userAgent) >= 11,
-                            asyncAbort = !!connection.withCredentials && isFirefox11OrGreater;
+                            isChrome58OrGreater = signalR._.chromeMajorVersion(window.navigator.userAgent) >= 58,
+                            asyncAbort = !!connection.withCredentials && isFirefox11OrGreater || isChrome58OrGreater;
 
                         connection.log("The start request succeeded. Transitioning to the connected state.");
 
@@ -628,7 +638,7 @@
                             connection.stop(asyncAbort);
                         });
 
-                        if (isFirefox11OrGreater) {
+                        if (isFirefox11OrGreater || isChrome58OrGreater) {
                             // Firefox does not fire cross-domain XHRs in the normal unload handler on tab close.
                             // #2400
                             _pageWindow.bind("beforeunload", function () {

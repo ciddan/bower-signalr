@@ -1,11 +1,11 @@
 {
     "name": "signalr",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "description": "Microsoft ASP.NET SignalR JavaScript Client",
     "main": "jquery.signalR.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/signalr/bower-signalr.git"
+        "url": "git+https://github.com/ciddan/bower-signalr.git"
     },
     "keywords": [
         "signalr",
